@@ -9,6 +9,49 @@ import enum
 Base = declarative_base()
 
 
+class InstagramAccount(Base):
+    """Instagram account registry for manual upload queue"""
+    __tablename__ = "instagram_accounts"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, nullable=False, index=True)
+    label = Column(String, nullable=False)
+    status = Column(String, default="active", nullable=False, index=True)
+    
+    automation_enabled = Column(Boolean, default=False)
+    last_used_at = Column(DateTime, nullable=True)
+    
+    is_deleted = Column(Boolean, default=False, index=True)
+    deleted_at = Column(DateTime, nullable=True)
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    upload_queue = relationship("UploadQueue", back_populates="instagram_account")
+
+
+class UploadQueue(Base):
+    """Manual upload queue for reels"""
+    __tablename__ = "upload_queue"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    reel_id = Column(String, ForeignKey("reels.id"), nullable=False, index=True)
+    instagram_account_id = Column(Integer, ForeignKey("instagram_accounts.id"), nullable=False, index=True)
+    
+    upload_status = Column(String, default="pending", nullable=False, index=True)
+    upload_error = Column(Text, nullable=True)
+    uploaded_at = Column(DateTime, nullable=True)
+    
+    instagram_post_id = Column(String, nullable=True)
+    instagram_url = Column(String, nullable=True)
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    reel = relationship("Reel")
+    instagram_account = relationship("InstagramAccount", back_populates="upload_queue")
+
+
 class InstagramSettings(Base):
     """Instagram OAuth and account settings"""
     __tablename__ = "instagram_settings"
@@ -134,4 +177,4 @@ class ProcessingLog(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
 
-__all__ = ["Base", "InstagramSettings", "Video", "VideoChunk", "Reel", "Job", "ProcessingLog"]
+__all__ = ["Base", "InstagramAccount", "UploadQueue", "InstagramSettings", "Video", "VideoChunk", "Reel", "Job", "ProcessingLog"]
