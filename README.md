@@ -2,6 +2,14 @@
 
 A modern, premium-quality Next.js frontend for converting YouTube long-form videos into Instagram Reels. Built with cutting-edge technologies and best practices for production deployment.
 
+## 🚀 **NEW USER? START HERE!**
+
+**→ See [START_HERE.md](./START_HERE.md) for a simple guide to run the website on your local machine.**
+
+This is a **full-stack application** that requires both frontend (Next.js) and backend (FastAPI) servers to be running on your computer.
+
+---
+
 ## 🎯 Features
 
 - **Modern UI**: Glassmorphism + gradient design with premium aesthetics
