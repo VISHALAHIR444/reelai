@@ -39,7 +39,7 @@ class Video(Base, IDMixin, TimestampMixin):
     transcript_source = Column(String(50), nullable=True)  # youtube, google_speech
     
     # Metadata
-    metadata = Column(JSON, nullable=True)  # Additional metadata
+    video_metadata = Column(JSON, nullable=True)
     
     # Relationships
     user = relationship("User", back_populates="videos")

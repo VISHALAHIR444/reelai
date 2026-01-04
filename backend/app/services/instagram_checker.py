@@ -6,7 +6,7 @@ import requests
 from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
-from app.models import InstagramSettings
+from app.models import InstagramToken
 
 logger = logging.getLogger(__name__)
 settings = get_settings()
@@ -55,7 +55,7 @@ class InstagramChecker:
             raise
 
     def check_connection(self, db: Session) -> Dict:
-        record: Optional[InstagramSettings] = db.query(InstagramSettings).filter_by(is_active=True).first()
+        record: Optional[InstagramToken] = db.query(InstagramToken).filter_by(is_active=True).first()
 
         if not record:
             return {

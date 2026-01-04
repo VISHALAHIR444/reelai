@@ -1,226 +1,211 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, Layers, Wand2, Timer, BarChart3, Shield, Workflow, PlaySquare, PlugZap } from "lucide-react";
+import Hero from "@/components/hero/Hero";
+import { Panel } from "@/components/dashboard/Panel";
+import { motion } from "framer-motion";
+
+const metrics = [
+  { label: "Reels Generated", value: "1,247" },
+  { label: "Avg Processing", value: "2m 18s" },
+  { label: "Queue Active", value: "3" },
+  { label: "Accounts", value: "2" },
+];
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      {/* Hero */}
-      <section className="relative overflow-hidden px-6 py-16 sm:px-10 lg:px-14">
-        <div className="absolute inset-0 pointer-events-none opacity-70" aria-hidden>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(0,0,0,0.08),transparent_40%),radial-gradient(circle_at_80%_10%,rgba(0,0,0,0.05),transparent_40%),radial-gradient(circle_at_40%_80%,rgba(0,0,0,0.06),transparent_45%)]" />
-        </div>
-        <div className="mx-auto max-w-6xl grid gap-10 lg:grid-cols-[1.1fr_0.9fr] items-start relative z-10">
-          <div className="space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-card/70 px-3 py-2 text-xs uppercase tracking-[0.14em] text-muted-foreground">
-              <Sparkles className="h-4 w-4" /> Human-made monochrome
+    <div className="relative min-h-screen">
+      <Hero />
+
+      <div className="max-w-7xl mx-auto px-6 py-24 space-y-16">
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+          className="grid grid-cols-2 md:grid-cols-4 gap-6"
+        >
+          {metrics.map((metric, i) => (
+            <div key={i} className="studio-panel p-6 text-center">
+              <p className="studio-text-label mb-2">{metric.label}</p>
+              <p className="text-3xl font-semibold text-studio-paper">{metric.value}</p>
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
-              Turn long YouTube videos into disciplined, ready-to-post Reels.
-            </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl leading-relaxed">
-              GRAVIXAI slices, scores, and formats your footage automatically. No color noise, no fluff—just a focused pipeline that keeps everything inside one calm surface.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Link href="/add-video">
-                <Button size="lg" className="h-12 px-6 flex items-center gap-2">
-                  Add a video
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-              <Link href="/connect-instagram">
-                <Button size="lg" variant="outline" className="h-12 px-6 flex items-center gap-2">
-                  Connect Instagram
-                  <PlugZap className="h-4 w-4" />
-                </Button>
-              </Link>
+          ))}
+        </motion.div>
+
+        <div className="grid md:grid-cols-2 gap-6">
+          <Panel title="Pipeline Status" subtitle="Live processing">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between py-3 border-b border-white/5">
+                <span className="text-studio-cloud">Segmenting video</span>
+                <span className="studio-text-value">68%</span>
+              </div>
+              <div className="h-1 bg-studio-slate rounded-full overflow-hidden">
+                <div className="h-full w-[68%] bg-gradient-to-r from-studio-accent to-studio-gold transition-all duration-500" />
+              </div>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 text-sm">
-              {[
-                { label: "Cuts scored", value: "+12k" },
-                { label: "Avg. prep time", value: "2m 30s" },
-                { label: "IG-ready ratio", value: "94%" },
-                { label: "Export size", value: "1080x1920" },
-              ].map((item) => (
-                <div key={item.label} className="rounded-xl border border-border/70 bg-card/70 px-4 py-3">
-                  <p className="text-xs text-muted-foreground uppercase tracking-wide">{item.label}</p>
-                  <p className="text-xl font-semibold mt-1">{item.value}</p>
+          </Panel>
+
+          <Panel title="Upload Queue" subtitle="Ready to publish">
+            <div className="space-y-3">
+              {["Founder story / Episode 12", "Product demo / Launch teaser", "Behind the scenes"].map((item, i) => (
+                <div key={i} className="flex items-center justify-between p-3 bg-studio-slate/30 rounded-xl border border-white/5">
+                  <span className="text-studio-cloud text-sm">{item}</span>
+                  <span className="text-xs text-studio-accent">Ready</span>
                 </div>
               ))}
             </div>
-          </div>
-
-          <div className="relative">
-            <div className="absolute -top-6 -right-6 h-32 w-32 rounded-full border border-border/40" aria-hidden></div>
-            <div className="absolute -bottom-8 -left-10 h-28 w-28 rounded-full border border-border/30" aria-hidden></div>
-            <div className="relative rounded-2xl border border-border/60 bg-card/80 shadow-organic p-6 space-y-4">
-              <div className="rounded-xl border border-border/60 bg-background/60 p-4 flex items-center justify-between">
-                <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">Current job</p>
-                  <p className="font-semibold">Tech Talk 54: AI vs Video</p>
-                </div>
-                <div className="rounded-full border border-border px-3 py-1 text-xs">Processing</div>
-              </div>
-              <div className="rounded-xl border border-border/60 bg-background/60 p-4 space-y-3">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Segmenting</span>
-                  <span className="font-medium">65%</span>
-                </div>
-                <div className="h-2 rounded-full bg-border/70 overflow-hidden">
-                  <div className="h-full w-2/3 bg-foreground" />
-                </div>
-                <div className="grid grid-cols-3 gap-2 text-xs text-muted-foreground">
-                  <span className="rounded-lg border border-border/60 bg-card/60 px-2 py-2">Captions</span>
-                  <span className="rounded-lg border border-border/60 bg-card/60 px-2 py-2">Vertical crop</span>
-                  <span className="rounded-lg border border-border/60 bg-card/60 px-2 py-2">Scene score</span>
-                </div>
-              </div>
-              <div className="rounded-xl border border-border/60 bg-background/60 p-4 space-y-2 text-sm">
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Next up</span>
-                  <span className="font-medium">Publish to IG</span>
-                </div>
-                <p className="text-muted-foreground">Auto-post queue keeps reels synced once you approve.</p>
-              </div>
-            </div>
-          </div>
+          </Panel>
         </div>
-      </section>
 
-      {/* Proof points */}
-      <section className="px-6 sm:px-10 lg:px-14 pb-14">
-        <div className="mx-auto max-w-6xl grid gap-4 md:grid-cols-3">
-          {[
-            {
-              icon: Layers,
-              title: "Structured output",
-              desc: "Every reel comes with clean captions, safe crop, and audio checked. No retries needed.",
-            },
-            {
-              icon: Wand2,
-              title: "Monochrome focus",
-              desc: "A single aesthetic direction—no random gradients or off-brand color hits anywhere.",
-            },
-            {
-              icon: Timer,
-              title: "Under 3 minutes",
-              desc: "From paste to ready-to-post in minutes, not hours of timeline work.",
-            },
-          ].map((item) => {
-            const Icon = item.icon;
-            return (
-              <div key={item.title} className="rounded-2xl border border-border/70 bg-card/70 p-5 space-y-3 shadow-soft">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Icon className="h-4 w-4" />
-                  <span>{item.title}</span>
-                </div>
-                <p className="text-base text-muted-foreground leading-relaxed">{item.desc}</p>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Workflow */}
-      <section className="px-6 sm:px-10 lg:px-14 pb-16">
-        <div className="mx-auto max-w-6xl rounded-2xl border border-border/70 bg-card/70 p-6 sm:p-8 shadow-organic">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">Workflow</p>
-              <h2 className="text-3xl sm:text-4xl font-bold mt-2">A disciplined four-step lane.</h2>
-            </div>
-            <Link href="/connect-instagram">
-              <Button variant="outline">See connection status</Button>
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-8">
-            {[
-              { title: "Paste", desc: "Drop a YouTube link—no uploads needed.", icon: Workflow },
-              { title: "Slice", desc: "Scene-score, caption, crop, normalize audio.", icon: PlaySquare },
-              { title: "Review", desc: "Skim the best cuts, remove anything you dislike.", icon: Shield },
-              { title: "Publish", desc: "Push to Instagram in-line. No app hopping.", icon: PlugZap },
-            ].map((step, idx) => {
-              const Icon = step.icon;
-              return (
-                <div key={step.title} className="rounded-xl border border-border/70 bg-background/80 p-4 space-y-3">
-                  <div className="flex items-center justify-between text-sm text-muted-foreground">
-                    <span className="rounded-full border border-border/70 px-2 py-1 text-xs">0{idx + 1}</span>
-                    <Icon className="h-4 w-4" />
-                  </div>
-                  <h3 className="text-lg font-semibold">{step.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{step.desc}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Metrics + social proof */}
-      <section className="px-6 sm:px-10 lg:px-14 pb-16">
-        <div className="mx-auto max-w-6xl grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-2xl border border-border/70 bg-card/70 p-6 sm:p-8 shadow-soft space-y-4">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <BarChart3 className="h-4 w-4" /> Operational metrics
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {[{ label: "Render success", value: "99.2%" }, { label: "Token health", value: "Live" }, { label: "Avg retry", value: "<1x" }].map((m) => (
-                <div key={m.label} className="rounded-xl border border-border/70 bg-background/70 px-4 py-3">
-                  <p className="text-xs text-muted-foreground uppercase tracking-wide">{m.label}</p>
-                  <p className="text-2xl font-semibold mt-2">{m.value}</p>
-                </div>
-              ))}
-            </div>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              Built to stay within Meta Graph v19 constraints. Tokens, permissions, and page links are checked before you publish.
-            </p>
-          </div>
-          <div className="rounded-2xl border border-border/70 bg-card/70 p-6 sm:p-7 shadow-soft space-y-4">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Shield className="h-4 w-4" /> Safe by default
-            </div>
-            <p className="text-lg font-semibold">Monochrome UI that keeps you in flow.</p>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              No extra tabs, no rainbow gradients. Everything you need—link input, processing, IG connection, status—lives inside one calm surface.
-            </p>
-            <div className="rounded-xl border border-border/70 bg-background/70 p-4 space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Instagram connect</span>
-                <span className="font-medium">Live via Graph v19</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Publishing</span>
-                <span className="font-medium">Direct to IG Reels</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Processing</span>
-                <span className="font-medium">1080x1920, captioned</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="px-6 sm:px-10 lg:px-14 pb-20">
-        <div className="mx-auto max-w-5xl rounded-2xl border border-border/70 bg-card/80 p-8 sm:p-10 text-center shadow-organic space-y-4">
-          <h2 className="text-3xl sm:text-4xl font-bold">Keep everything monochrome. Ship reels faster.</h2>
-          <p className="text-muted-foreground max-w-3xl mx-auto">
-            Start with a link, end with a published reel. No sign-up loops, no multi-color chaos. Just GRAVIXAI doing the work.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+        <Panel title="Studio Actions" className="text-center">
+          <div className="flex items-center justify-center gap-4">
             <Link href="/add-video">
-              <Button size="lg">Add a video</Button>
+              <button className="studio-button-primary">
+                Add Video
+              </button>
             </Link>
-            <Link href="/connect-instagram">
-              <Button size="lg" variant="outline">Connect Instagram</Button>
+            <Link href="/dashboard">
+              <button className="studio-button-secondary">
+                View Dashboard
+              </button>
+            </Link>
+            <Link href="/videos">
+              <button className="studio-button-secondary">
+                Reels Library
+              </button>
             </Link>
           </div>
-        </div>
-      </section>
+        </Panel>
+      </div>
+    </div>
+  );
+}
+
+        <section className="grid gap-5 lg:grid-cols-3">
+          <Panel title="Add YouTube link" subtitle="Primary lane">
+            <div className="rounded-xl border border-white/10 bg-black/30 p-4 space-y-3">
+              <div className="flex items-center gap-3 rounded-lg border border-white/10 bg-[#0B0F14] px-4 py-3">
+                <span className="text-white/50">https://</span>
+                <input className="w-full bg-transparent text-white placeholder:text-white/40 focus:outline-none" placeholder="youtube.com/watch?v=..." />
+                <Button className="rounded-lg bg-white/10 text-white hover:bg-white/15" size="sm">Queue</Button>
+              </div>
+              <p className="text-xs text-white/50">Auto-crop, caption, score, and prep vertical output. Future: multi-platform split.</p>
+            </div>
+          </Panel>
+
+          <Panel title="Processing status" subtitle="Live pipeline">
+            <div className="space-y-3 text-sm text-white/80">
+              <div className="flex items-center justify-between">
+                <span className="text-white/60">Segmenting</span>
+                <span className="font-semibold">68%</span>
+              </div>
+              <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+                <div className="h-full w-[68%] rounded-full bg-gradient-to-r from-[#A4B4FF] to-[#F6C177]" />
+              </div>
+              <div className="flex flex-wrap gap-2 text-[11px] text-white/70">
+                {['AI captions', 'Vertical crop', 'Scene score', 'Audio normalize'].map((pill) => (
+                  <span key={pill} className="rounded-lg border border-white/10 bg-white/5 px-2 py-1">{pill}</span>
+                ))}
+              </div>
+            </div>
+          </Panel>
+
+          <Panel title="Generated reels" subtitle="Cinematic preview" action={<Link href="/videos" className="text-xs text-[#A4B4FF]">Open gallery</Link>}>
+            <div className="grid grid-cols-3 gap-2">
+              {reels.map((reel) => (
+                <div key={reel.title} className="relative aspect-[9/16] overflow-hidden rounded-lg border border-white/10" style={{ backgroundImage: reel.gradient }}>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-transparent" />
+                  <div className="absolute bottom-2 left-2 right-2 text-[11px] text-white/80">
+                    <p className="line-clamp-2 leading-tight">{reel.title}</p>
+                    <div className="flex items-center justify-between text-white/60">
+                      <span>{reel.duration}</span>
+                      <span className="rounded-full border border-white/15 bg-white/10 px-2 py-0.5">{reel.status}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Panel>
+        </section>
+
+        <section className="grid gap-5 lg:grid-cols-[2fr_1.4fr]">
+          <Panel title="Queue & scheduling" subtitle="Calm timeline">
+            <QueueTimeline items={queueItems} />
+          </Panel>
+
+          <Panel title="Future-ready" subtitle="Automation lanes">
+            <div className="space-y-3 text-sm text-white/70">
+              <div className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-4 py-3">
+                <span>AI captions</span>
+                <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] text-white/70">Planned</span>
+              </div>
+              <div className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-4 py-3">
+                <span>Multi-platform reels</span>
+                <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] text-white/70">Soon</span>
+              </div>
+              <div className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-4 py-3">
+                <span>Auto-upload automation</span>
+                <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] text-white/70">Enabled</span>
+              </div>
+              <div className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-4 py-3">
+                <span>Analytics dashboard</span>
+                <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] text-white/70">Soon</span>
+              </div>
+            </div>
+          </Panel>
+        </section>
+
+        <section className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-white">Generated reels</h2>
+            <span className="text-xs text-white/50">Cinematic grid</span>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {reels.map((reel) => (
+              <ReelCard key={reel.title} {...reel} />
+            ))}
+          </div>
+        </section>
+
+        <section className="grid gap-5 lg:grid-cols-3">
+          <Panel title="Accounts" subtitle="Instagram + future platforms" action={<Link href="/settings/social-accounts" className="text-xs text-[#A4B4FF]">Manage</Link>}>
+            <div className="space-y-2 text-sm text-white/70">
+              <div className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-4 py-3">
+                <span>Instagram Business</span>
+                <span className="text-[#A4B4FF] text-xs">Connected</span>
+              </div>
+              <div className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-4 py-3">
+                <span>Threads</span>
+                <span className="text-white/50 text-xs">Planned</span>
+              </div>
+            </div>
+          </Panel>
+
+          <Panel title="Storage" subtitle="Usage">
+            <div className="space-y-2 text-sm text-white/80">
+              <div className="flex items-center justify-between">
+                <span className="text-white/60">Used</span>
+                <span className="font-semibold">38.4 GB / 120 GB</span>
+              </div>
+              <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+                <div className="h-full w-[32%] rounded-full bg-[#A4B4FF]" />
+              </div>
+              <p className="text-xs text-white/50">Auto-cleanup for completed jobs after 14 days.</p>
+            </div>
+          </Panel>
+
+          <Panel title="Feature flags" subtitle="Disabled by default">
+            <div className="space-y-2 text-sm text-white/70">
+              {['AI captions v2', 'Multi-project workspaces', 'Analytics alpha', 'Scheduler v2'].map((flag) => (
+                <div key={flag} className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-4 py-3">
+                  <span>{flag}</span>
+                  <span className="text-white/40 text-xs">Locked</span>
+                </div>
+              ))}
+            </div>
+          </Panel>
+        </section>
+      </div>
     </div>
   );
 }

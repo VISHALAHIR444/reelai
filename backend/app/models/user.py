@@ -25,6 +25,7 @@ class User(IDMixin, TimestampMixin, Base):
     videos = relationship("Video", back_populates="user", cascade="all, delete-orphan")
     instagram_token = relationship("InstagramToken", back_populates="user", uselist=False, cascade="all, delete-orphan")
     jobs = relationship("Job", back_populates="user", cascade="all, delete-orphan")
+    instagram_accounts = relationship("InstagramAccount", back_populates="user", cascade="all, delete-orphan")
     
     def __repr__(self) -> str:
         return f"<User {self.username}>"

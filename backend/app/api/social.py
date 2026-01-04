@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException, Depends, Query
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from app.core.database import get_db
-from app.models import InstagramSettings
+from app.models import InstagramToken
 from app.services.instagram_oauth_service import FacebookOAuthService
 from app.core.config import get_settings
 import uuid
@@ -93,25 +93,28 @@ async def facebook_callback(
             )
         
         # Step 5: Save to database
-        existing = db.query(InstagramSettings).filter_by(ig_user_id=ig_user_id).first()
+        existing = db.query(InstagramToken).filter_by(ig_user_id=ig_user_id).first()
         
         if existing:
             existing.long_lived_access_token = long_token
-            existing.token_expires_at = expires_at
-            existing.is_active = True
+            existing.expires_at = expires_at
+            existing.is_connected = True
             existing.updated_at = datetime.utcnow()
             db.commit()
         else:
-            instagram_settings = InstagramSettings(
+            instagram_token = InstagramToken(
+                user_id=1,
                 fb_page_id=page_id,
                 fb_page_name=page_name,
                 fb_user_id=user_id or "",
                 ig_user_id=ig_user_id,
-                long_lived_access_token=long_token,
-                token_expires_at=expires_at,
-                is_active=True
+                long_lived_token=long_token,
+                access_token=long_token,
+                expires_at=expires_at,
+                is_connected=True,
+                is_valid=True
             )
-            db.add(instagram_settings)
+            db.add(instagram_token)
             db.commit()
         
         logger.info(f"✓ Instagram account connected: {ig_user_id}")
@@ -134,7 +137,7 @@ async def facebook_callback(
 async def get_social_status(db: Session = Depends(get_db)):
     """Get current Instagram connection status"""
     try:
-        settings_record = db.query(InstagramSettings).filter_by(is_active=True).first()
+        settings_record = db.query(InstagramToken).filter_by(is_active=True).first()
         
         if not settings_record:
             return {
@@ -143,7 +146,7 @@ async def get_social_status(db: Session = Depends(get_db)):
             }
         
         is_token_valid = True
-        if settings_record.token_expires_at and settings_record.token_expires_at < datetime.utcnow():
+        if settings_record.expires_at and settings_record.expires_at < datetime.utcnow():
             is_token_valid = False
         
         return {
@@ -151,7 +154,7 @@ async def get_social_status(db: Session = Depends(get_db)):
             "ig_user_id": settings_record.ig_user_id,
             "fb_page_name": settings_record.fb_page_name,
             "fb_page_id": settings_record.fb_page_id,
-            "token_expires_at": settings_record.token_expires_at,
+            "expires_at": settings_record.expires_at,
             "is_token_valid": is_token_valid
         }
     except Exception as e:
@@ -166,7 +169,7 @@ async def get_social_status(db: Session = Depends(get_db)):
 async def refresh_token(db: Session = Depends(get_db)):
     """Refresh Instagram access token"""
     try:
-        settings_record = db.query(InstagramSettings).filter_by(is_active=True).first()
+        settings_record = db.query(InstagramToken).filter_by(is_active=True).first()
         
         if not settings_record:
             raise HTTPException(status_code=404, detail="No Instagram account connected")
@@ -176,7 +179,7 @@ async def refresh_token(db: Session = Depends(get_db)):
         )
         
         settings_record.long_lived_access_token = refresh_result.get("long_lived_token")
-        settings_record.token_expires_at = refresh_result.get("expires_at")
+        settings_record.expires_at = refresh_result.get("expires_at")
         settings_record.updated_at = datetime.utcnow()
         db.commit()
         
@@ -197,13 +200,13 @@ async def refresh_token(db: Session = Depends(get_db)):
 async def disconnect_instagram(db: Session = Depends(get_db)):
     """Disconnect Instagram account"""
     try:
-        settings_record = db.query(InstagramSettings).filter_by(is_active=True).first()
+        settings_record = db.query(InstagramToken).filter_by(is_active=True).first()
         
         if not settings_record:
             raise HTTPException(status_code=404, detail="No Instagram account connected")
         
         ig_id = settings_record.ig_user_id
-        settings_record.is_active = False
+        settings_record.is_connected = False
         settings_record.updated_at = datetime.utcnow()
         db.commit()
         

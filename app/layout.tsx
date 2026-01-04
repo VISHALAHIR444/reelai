@@ -3,12 +3,12 @@ import "@/styles/globals.css";
 import { RootLayout } from "@/components/layout/root-layout";
 
 export const metadata: Metadata = {
-  title: "GRAVIXAI — Convert YouTube to Instagram Reels",
+  title: "Reels Studio — Convert YouTube to Instagram Reels",
   description:
-    "Convert YouTube long videos to Instagram Reels automatically with GRAVIXAI. Upload, process, and share perfectly cut clips.",
-  keywords: ["GRAVIXAI", "YouTube", "Instagram", "Reels", "Video AI", "Automation"],
-  authors: [{ name: "GRAVIXAI" }],
-  creator: "GRAVIXAI",
+    "Transform YouTube videos into viral reels with cinematic precision. AI-powered automation for creators.",
+  keywords: ["Reels Studio", "YouTube", "Instagram", "Reels", "Video AI", "Automation"],
+  authors: [{ name: "Reels Studio" }],
+  creator: "Reels Studio",
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -17,7 +17,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#0f0f0f" />
+        <meta name="theme-color" content="#09090b" />
       </head>
       <body>
         <RootLayout>{children}</RootLayout>

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends, Query
 from sqlalchemy.orm import Session
 from app.core.database import get_db
-from app.models import Video, InstagramSettings, Reel
+from app.models import Video, Reel
 from app.schemas import VideoCreate, VideoResponse, VideoDetailResponse, SocialStatusResponse
 from app.services.youtube_downloader import YouTubeDownloader
 from app.core.config import get_settings

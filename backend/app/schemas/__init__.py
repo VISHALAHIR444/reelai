@@ -77,7 +77,7 @@ class ReelResponse(BaseModel):
 
 
 # Instagram Settings Schemas
-class InstagramSettingsBase(BaseModel):
+class InstagramTokenBase(BaseModel):
     fb_page_id: str
     fb_page_name: str
     fb_user_id: str
@@ -86,11 +86,11 @@ class InstagramSettingsBase(BaseModel):
     token_expires_at: datetime
 
 
-class InstagramSettingsCreate(InstagramSettingsBase):
+class InstagramTokenCreate(InstagramTokenBase):
     pass
 
 
-class InstagramSettingsResponse(InstagramSettingsBase):
+class InstagramTokenResponse(InstagramTokenBase):
     id: int
     is_active: bool
     created_at: datetime
