@@ -57,7 +57,10 @@ class Settings(BaseSettings):
     ffmpeg_path: str = os.getenv("FFMPEG_PATH", "ffmpeg")
     
     # CORS
-    allowed_origins: List[str] = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://10.0.0.11:3000").split(",")
+    @property
+    def allowed_origins(self) -> List[str]:
+        origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://10.0.0.11:3000")
+        return [origin.strip() for origin in origins.split(",")]
     
     # Logging
     log_level: str = os.getenv("LOG_LEVEL", "INFO")
@@ -88,21 +91,13 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         case_sensitive = False
-
-
-@lru_cache()
-def get_settings() -> Settings:
-    return Settings()
+        extra = "ignore"  # Ignore extra fields from .env
 
 
 @lru_cache()
 def get_settings() -> Settings:
     """Get cached settings instance"""
     return Settings()
-    
-    class Config:
-        env_file = ".env"
-        case_sensitive = False
 
 
 settings = Settings()
