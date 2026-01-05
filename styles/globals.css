@@ -10,6 +10,7 @@
   body {
     @apply bg-studio-black text-studio-paper font-sans antialiased;
     font-feature-settings: "cv11", "ss01", "ss02";
+    background: linear-gradient(135deg, #000000 0%, #0a0a0a 50%, #1a1a1a 100%);
   }
 
   html {
@@ -19,16 +20,16 @@
 
 @layer components {
   .studio-panel {
-    @apply bg-studio-coal/40 border border-white/[0.06] rounded-2xl backdrop-blur-xl shadow-studio-md;
-    background-image: radial-gradient(at 20% 20%, rgba(139, 122, 255, 0.03) 0px, transparent 50%);
+    @apply bg-studio-coal/60 border border-studio-neon-cyan/30 rounded-2xl backdrop-blur-xl shadow-studio-glow-cyan;
+    background-image: radial-gradient(at 20% 20%, rgba(0, 255, 255, 0.05) 0px, transparent 50%);
   }
 
   .studio-panel-hover {
-    @apply transition-all duration-500 hover:border-white/[0.12] hover:shadow-studio-lg;
+    @apply transition-all duration-500 hover:border-studio-neon-cyan/50 hover:shadow-studio-glow-cyan;
   }
 
   .studio-input {
-    @apply bg-studio-slate/50 border border-white/[0.08] rounded-xl px-4 py-3 text-studio-paper placeholder:text-studio-fog focus:outline-none focus:border-studio-accent/50 focus:ring-2 focus:ring-studio-accent/20 transition-all;
+    @apply bg-studio-slate/70 border border-studio-neon-cyan/30 rounded-xl px-4 py-3 text-studio-paper placeholder:text-studio-fog focus:outline-none focus:border-studio-neon-cyan focus:ring-2 focus:ring-studio-neon-cyan/50 transition-all shadow-studio-glow-cyan;
   }
 
   .studio-button {
@@ -36,11 +37,11 @@
   }
 
   .studio-button-primary {
-    @apply studio-button bg-studio-accent text-white hover:bg-studio-accentDim shadow-studio-glow hover:shadow-studio-glow hover:scale-[1.02];
+    @apply studio-button bg-studio-neon-cyan text-studio-black hover:bg-studio-neon-cyan/80 shadow-studio-glow-cyan hover:shadow-studio-glow-cyan hover:scale-[1.02];
   }
 
   .studio-button-secondary {
-    @apply studio-button bg-studio-steel/60 text-studio-cloud hover:bg-studio-steel border border-white/[0.08] hover:border-white/[0.12];
+    @apply studio-button bg-studio-slate/70 text-studio-paper hover:bg-studio-slate border border-studio-neon-magenta/30 hover:border-studio-neon-magenta/50 hover:shadow-studio-glow-magenta;
   }
 
   .studio-text-label {

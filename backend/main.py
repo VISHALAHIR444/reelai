@@ -86,14 +86,6 @@ async def general_exception_handler(request, exc):
     return JSONResponse(
         status_code=500,
         content={
-            "detail": "Internal server error",
-            "error": str(exc) if settings.debug else "Internal error"
-        }
-    )
-    """General exception handler"""
-    return JSONResponse(
-        status_code=500,
-        content={
             "success": False,
             "message": "Internal server error",
             "error": str(exc) if settings.debug else "An error occurred",

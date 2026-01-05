@@ -9,7 +9,35 @@ from app.schemas import ReelResponse
 router = APIRouter(prefix="/api/reels", tags=["reels"])
 
 
-@router.get("/{video_id}", response_model=list[ReelResponse])
+@router.get("/", response_model=list[ReelResponse])
+async def list_all_reels(
+    db: Session = Depends(get_db),
+    skip: int = Query(0),
+    limit: int = Query(50),
+    status: str = Query(None)
+):
+    """List all reels with optional status filter"""
+    query = db.query(Reel)
+    
+    if status:
+        query = query.filter_by(publish_status=status)
+    
+    reels = query.offset(skip).limit(limit).all()
+    
+    return reels
+
+
+@router.get("/pending-publish/count")
+async def get_pending_publish_count(db: Session = Depends(get_db)):
+    """Get count of reels pending publish"""
+    count = db.query(Reel).filter_by(publish_status="pending").count()
+    
+    return {
+        "pending_count": count
+    }
+
+
+@router.get("/video/{video_id}", response_model=list[ReelResponse])
 async def get_video_reels(
     video_id: str,
     db: Session = Depends(get_db),
@@ -59,34 +87,6 @@ async def publish_reel(
         "reel_id": reel_id,
         "status": "publishing",
         "message": "Reel publish job queued"
-    }
-
-
-@router.get("/", response_model=list[ReelResponse])
-async def list_all_reels(
-    db: Session = Depends(get_db),
-    skip: int = Query(0),
-    limit: int = Query(50),
-    status: str = Query(None)
-):
-    """List all reels with optional status filter"""
-    query = db.query(Reel)
-    
-    if status:
-        query = query.filter_by(publish_status=status)
-    
-    reels = query.offset(skip).limit(limit).all()
-    
-    return reels
-
-
-@router.get("/pending-publish/count")
-async def get_pending_publish_count(db: Session = Depends(get_db)):
-    """Get count of reels pending publish"""
-    count = db.query(Reel).filter_by(publish_status="pending").count()
-    
-    return {
-        "pending_count": count
     }
 
 

@@ -95,14 +95,4 @@ def get_settings() -> Settings:
     return Settings()
 
 
-@lru_cache()
-def get_settings() -> Settings:
-    """Get cached settings instance"""
-    return Settings()
-    
-    class Config:
-        env_file = ".env"
-        case_sensitive = False
-
-
 settings = Settings()

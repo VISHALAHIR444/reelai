@@ -13,15 +13,15 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = "default", size = "default", ...props }, ref) => {
     const variants = {
       default:
-        "bg-primary text-primary-foreground hover:bg-primary/90 shadow-soft hover:shadow-soft-hover active:shadow-soft",
+        "bg-studio-neon-cyan text-studio-black hover:bg-studio-neon-cyan/80 shadow-studio-glow-cyan hover:shadow-studio-glow-cyan active:shadow-studio-glow-cyan",
       destructive:
-        "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-soft hover:shadow-soft-hover",
+        "bg-studio-neon-pink text-studio-black hover:bg-studio-neon-pink/80 shadow-studio-glow-magenta hover:shadow-studio-glow-magenta",
       outline:
-        "border border-input bg-background hover:bg-accent hover:text-accent-foreground shadow-soft hover:shadow-soft-hover",
+        "border border-studio-neon-cyan/50 bg-studio-slate/70 hover:bg-studio-slate text-studio-paper shadow-studio-glow-cyan hover:shadow-studio-glow-cyan",
       secondary:
-        "bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-soft hover:shadow-soft-hover",
-      ghost: "hover:bg-accent hover:text-accent-foreground",
-      link: "text-primary underline-offset-4 hover:underline",
+        "bg-studio-slate text-studio-paper hover:bg-studio-iron shadow-studio-glow-magenta hover:shadow-studio-glow-magenta",
+      ghost: "hover:bg-studio-slate hover:text-studio-paper text-studio-fog",
+      link: "text-studio-neon-cyan underline-offset-4 hover:underline hover:text-studio-neon-cyan/80",
     };
 
     const sizes = {

@@ -3,12 +3,12 @@ import "@/styles/globals.css";
 import { RootLayout } from "@/components/layout/root-layout";
 
 export const metadata: Metadata = {
-  title: "Reels Studio — Convert YouTube to Instagram Reels",
+  title: "Reels Forge — Neural YouTube to Instagram Reels Converter",
   description:
-    "Transform YouTube videos into viral reels with cinematic precision. AI-powered automation for creators.",
-  keywords: ["Reels Studio", "YouTube", "Instagram", "Reels", "Video AI", "Automation"],
-  authors: [{ name: "Reels Studio" }],
-  creator: "Reels Studio",
+    "Neural Networks. Quantum Processing. Transform YouTube videos into viral Instagram Reels with AI precision.",
+  keywords: ["Reels Forge", "YouTube", "Instagram", "Reels", "AI", "Neural Networks", "Quantum"],
+  authors: [{ name: "Reels Forge" }],
+  creator: "Reels Forge",
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -17,7 +17,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#09090b" />
+        <meta name="theme-color" content="#000000" />
       </head>
       <body>
         <RootLayout>{children}</RootLayout>

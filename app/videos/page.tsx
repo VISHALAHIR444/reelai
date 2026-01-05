@@ -2,12 +2,10 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { motion } from "framer-motion";
+import { Panel } from "@/components/dashboard/Panel";
 import { api } from "@/lib/api";
-import { Badge } from "@/components/ui/badge";
-import { Search, Trash2, Download, Eye, Clock, Video, ListFilter } from "lucide-react";
+import { Search, Download, Eye, Clock, Video, Play } from "lucide-react";
 
 export default function VideosPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -35,110 +33,166 @@ export default function VideosPage() {
   }, [videos, searchQuery]);
 
   const renderStatus = (status?: string) => {
-    if (status === "completed") return <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">✓ Completed</Badge>;
-    if (status === "processing") return <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200">⟳ Processing</Badge>;
-    return <Badge className="bg-muted text-foreground">Pending</Badge>;
+    if (status === "completed") return (
+      <div className="px-3 py-1 bg-studio-accent/10 text-studio-accent text-xs rounded-full font-medium">
+        ✓ Completed
+      </div>
+    );
+    if (status === "processing") return (
+      <div className="px-3 py-1 bg-studio-gold/10 text-studio-gold text-xs rounded-full font-medium">
+        ⟳ Processing
+      </div>
+    );
+    return (
+      <div className="px-3 py-1 bg-studio-iron/50 text-studio-fog text-xs rounded-full font-medium">
+        Pending
+      </div>
+    );
   };
 
   return (
-    <div className="space-y-8 max-w-6xl">
-      <div className="space-y-3">
-        <div className="inline-flex items-center gap-2 rounded-full border border-border/70 px-3 py-1 text-xs uppercase tracking-[0.14em] text-muted-foreground">
-          <ListFilter className="h-4 w-4" /> Library
+    <div className="min-h-screen">
+      {/* Ambient Background */}
+      <div className="fixed inset-0 -z-10">
+        <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-studio-velvet/3 rounded-full blur-3xl animate-drift-slow" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 py-12 space-y-12">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center space-y-4"
+        >
+          <h1 className="text-display-lg text-studio-paper font-light">
+            Reels Timeline
+          </h1>
+          <p className="text-xl text-studio-cloud max-w-2xl mx-auto">
+            Your cinematic journey. From concept to vertical masterpiece.
+          </p>
+        </motion.div>
+
+        {/* Search and Stats */}
+        <div className="grid lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            <Panel title="Search Library" subtitle="Find your creations">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-studio-fog" />
+                <input
+                  type="text"
+                  placeholder="Search videos..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full studio-input pl-12"
+                />
+              </div>
+              <p className="studio-text-label mt-2">
+                {isLoading ? "Loading..." : `${filteredVideos.length} reels in your library`}
+              </p>
+            </Panel>
+          </div>
+
+          <Panel title="Overview" subtitle="Your progress">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="text-center p-4 bg-studio-coal/30 rounded-xl">
+                <p className="studio-text-label">Total</p>
+                <p className="text-2xl font-light text-studio-paper">{videos.length}</p>
+              </div>
+              <div className="text-center p-4 bg-studio-accent/5 rounded-xl">
+                <p className="studio-text-label">Ready</p>
+                <p className="text-2xl font-light text-studio-accent">
+                  {videos.filter((v) => v.status === "completed").length}
+                </p>
+              </div>
+            </div>
+          </Panel>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">My videos, all in monochrome.</h1>
-        <p className="text-muted-foreground max-w-2xl">Search, preview, and jump back into processing. No fake data—pulled straight from the backend.</p>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-6">
-        <Card className="border border-border/70 bg-card/70 shadow-soft">
-          <CardHeader>
-            <CardTitle>Search</CardTitle>
-            <CardDescription>Filter across your processed videos.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none" />
-              <Input
-                placeholder="Search videos..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <div className="text-xs text-muted-foreground">{isLoading ? "Loading..." : `${filteredVideos.length} videos`}</div>
-          </CardContent>
-        </Card>
+        {/* Timeline */}
+        <div className="space-y-6">
+          {isLoading && (
+            <Panel>
+              <div className="py-12 text-center">
+                <p className="studio-text-label">Loading your cinematic library...</p>
+              </div>
+            </Panel>
+          )}
 
-        <Card className="border border-border/70 bg-card/70 shadow-soft">
-          <CardHeader>
-            <CardTitle>At a glance</CardTitle>
-            <CardDescription>Counts update from the backend.</CardDescription>
-          </CardHeader>
-          <CardContent className="grid grid-cols-2 gap-3 text-sm">
-            <div className="rounded-xl border border-border/60 bg-background/70 p-3 space-y-1">
-              <p className="text-muted-foreground">Total videos</p>
-              <p className="text-2xl font-semibold">{videos.length}</p>
-            </div>
-            <div className="rounded-xl border border-border/60 bg-background/70 p-3 space-y-1">
-              <p className="text-muted-foreground">Completed</p>
-              <p className="text-2xl font-semibold">{videos.filter((v) => v.status === "completed").length}</p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="space-y-4">
-        {isLoading && (
-          <Card className="border border-border/70 bg-card/70">
-            <CardContent className="py-10 text-center text-sm text-muted-foreground">Loading videos…</CardContent>
-          </Card>
-        )}
-
-        {!isLoading && filteredVideos.length === 0 && (
-          <Card className="border border-border/70 bg-card/70">
-            <CardContent className="py-12 text-center space-y-2">
-              <p className="font-medium">No videos yet</p>
-              <p className="text-sm text-muted-foreground">Add a YouTube link to start processing.</p>
-              <Link href="/add-video">
-                <Button>Add a video</Button>
-              </Link>
-            </CardContent>
-          </Card>
-        )}
-
-        {!isLoading && filteredVideos.map((video) => (
-          <Card key={video.id} className="border border-border/70 bg-card/70 shadow-soft">
-            <CardContent className="p-5">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div className="space-y-1">
-                  <p className="font-semibold text-lg">{video.title || "Untitled video"}</p>
-                  <p className="text-sm text-muted-foreground flex items-center gap-2">
-                    <Clock className="h-4 w-4" /> {video.duration || "--"}
-                    <span className="h-1 w-1 rounded-full bg-border" />
-                    <Video className="h-4 w-4" /> {new Date(video.created_at || Date.now()).toLocaleDateString()}
-                  </p>
+          {!isLoading && filteredVideos.length === 0 && (
+            <Panel className="text-center">
+              <div className="py-12 space-y-6">
+                <Video className="h-16 w-16 text-studio-fog mx-auto opacity-50" />
+                <div>
+                  <p className="text-studio-paper font-medium text-lg mb-2">Your timeline awaits</p>
+                  <p className="text-studio-cloud">Begin your first creation to see it here.</p>
                 </div>
-                <div className="flex items-center gap-3">
-                  {renderStatus(video.status)}
-                  <div className="flex gap-2">
-                    <Link href={`/processing-status?videoId=${video.id}`}>
-                      <Button variant="outline" size="icon">
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                    </Link>
-                    <Button variant="outline" size="icon">
-                      <Download className="h-4 w-4" />
-                    </Button>
-                    <Button variant="outline" size="icon" className="hover:bg-destructive/10">
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
+                <Link href="/add-video">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="studio-button-primary px-8 py-4"
+                  >
+                    Start Creating
+                  </motion.button>
+                </Link>
+              </div>
+            </Panel>
+          )}
+
+          {!isLoading && filteredVideos.map((video, index) => (
+            <motion.div
+              key={video.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1, duration: 0.6 }}
+            >
+              <Panel title={video.title || "Untitled Project"} className="hover:border-studio-accent/30 transition-all duration-500">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-6">
+                    <div className="w-16 h-16 bg-studio-accent/10 rounded-2xl flex items-center justify-center">
+                      <Play className="h-8 w-8 text-studio-accent" />
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-4 text-sm">
+                        <div className="flex items-center gap-1 text-studio-fog">
+                          <Clock className="h-4 w-4" />
+                          {video.duration || "--"}
+                        </div>
+                        <div className="flex items-center gap-1 text-studio-fog">
+                          <Video className="h-4 w-4" />
+                          {new Date(video.created_at || Date.now()).toLocaleDateString()}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    {renderStatus(video.status)}
+                    <div className="flex gap-2">
+                      <Link href={`/processing-status?videoId=${video.id}`}>
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="p-3 bg-studio-iron/50 hover:bg-studio-steel rounded-xl transition-colors"
+                        >
+                          <Eye className="h-5 w-5 text-studio-cloud" />
+                        </motion.button>
+                      </Link>
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="p-3 bg-studio-iron/50 hover:bg-studio-steel rounded-xl transition-colors"
+                      >
+                        <Download className="h-5 w-5 text-studio-cloud" />
+                      </motion.button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </Panel>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </div>
   );

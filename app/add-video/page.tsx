@@ -28,12 +28,14 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function AddVideoPage() {
   const router = useRouter();
   const [youtubeUrl, setYoutubeUrl] = useState("");
   const [clipLength, setClipLength] = useState("30");
   const [style, setStyle] = useState("auto");
+  const [customCaption, setCustomCaption] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [videoPreview, setVideoPreview] = useState<any>(null);
@@ -86,7 +88,7 @@ export default function AddVideoPage() {
     setIsLoading(true);
     try {
       // Create or reuse backend video record
-      const uploadResp = await api.video.uploadYoutube(youtubeUrl);
+      const uploadResp = await api.video.uploadYoutube(youtubeUrl, customCaption || undefined);
       const created = uploadResp.data;
       const vid = created.id as string;
       setCurrentVideoId(vid);
@@ -110,8 +112,8 @@ export default function AddVideoPage() {
         <div className="inline-flex items-center gap-2 rounded-full border border-border/70 px-3 py-1 text-xs uppercase tracking-[0.14em] text-muted-foreground">
           <Sparkles className="h-4 w-4" /> Paste once, stay inside
         </div>
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">Convert a YouTube link into ready Reels.</h1>
-        <p className="text-muted-foreground max-w-2xl">Disciplined, monochrome interface that trims, scores, captions, and preps your footage without leaving the page.</p>
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-studio-paper" style={{ textShadow: '0 0 20px rgba(0,255,255,0.5)' }}>Quantum Video Forge</h1>
+        <p className="text-studio-neon-cyan max-w-2xl" style={{ textShadow: '0 0 10px rgba(0,255,255,0.3)' }}>Neural processing pipeline. Transform YouTube streams into Instagram-ready reels with AI precision.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-6">
@@ -184,17 +186,29 @@ export default function AddVideoPage() {
               </div>
             </div>
 
+            <div className="space-y-2">
+              <Label htmlFor="customCaption">Custom caption (optional)</Label>
+              <textarea
+                id="customCaption"
+                placeholder="Enter a custom caption for your reels. Leave empty for AI-generated captions."
+                value={customCaption}
+                onChange={(e) => setCustomCaption(e.target.value)}
+                disabled={isLoading}
+                className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                maxLength={2200}
+              />
+              <p className="text-xs text-muted-foreground">Custom caption for Instagram posts. Max 2200 characters.</p>
+            </div>
+
             {videoPreview && (
               <div className="space-y-4 pt-4 border-t border-border/40">
                 <h3 className="font-semibold">Preview</h3>
-                <div className="rounded-xl overflow-hidden border border-border/60 bg-black">
-                  <img
+                <div className="rounded-xl overflow-hidden border border-border/60 bg-black relative">
+                  <Image
+                    fill
                     src={videoPreview.thumbnail}
                     alt="Video thumbnail"
-                    className="w-full aspect-video object-cover"
-                    onError={(e) => {
-                      e.currentTarget.src = "https://via.placeholder.com/320x180?text=Video+Preview";
-                    }}
+                    className="object-cover"
                   />
                 </div>
                 <div className="space-y-1">

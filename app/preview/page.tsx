@@ -14,6 +14,7 @@ import {
   Upload,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 interface Reel {
   id: number;
@@ -87,10 +88,11 @@ export default function PreviewPage() {
         <div className="lg:col-span-2 space-y-4">
           <Card className="overflow-hidden">
             <div className="relative aspect-[9/16] bg-black rounded-lg overflow-hidden">
-              <img
+              <Image
+                fill
                 src={currentReel.thumbnail}
                 alt={currentReel.title}
-                className="w-full h-full object-cover"
+                className="object-cover"
               />
               {/* Play Button Overlay */}
               <div className="absolute inset-0 flex items-center justify-center">

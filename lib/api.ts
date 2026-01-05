@@ -46,7 +46,7 @@ export const api = {
 
   // Video pipeline (aligns with backend /api/video routes)
   video: {
-    uploadYoutube: (youtubeUrl: string) => apiClient.post("/video/youtube", { youtube_url: youtubeUrl }),
+    uploadYoutube: (youtubeUrl: string, customCaption?: string) => apiClient.post("/video/youtube", { youtube_url: youtubeUrl, custom_caption: customCaption }),
     list: () => apiClient.get("/video"),
     get: (videoId: string) => apiClient.get(`/video/${videoId}`),
     process: (videoId: string) => apiClient.post(`/video/${videoId}/process`),
@@ -59,7 +59,7 @@ export const api = {
       apiClient.get("/reels", { params }),
     getDetails: (reelId: string) => apiClient.get(`/reels/${reelId}/details`),
     getByVideo: (videoId: string, params?: { skip?: number; limit?: number }) =>
-      apiClient.get(`/reels/${videoId}`, { params }),
+      apiClient.get(`/reels/video/${videoId}`, { params }),
     publish: (reelId: string) => apiClient.post(`/reels/${reelId}/publish`),
     pendingPublishCount: () => apiClient.get(`/reels/pending-publish/count`),
   },

@@ -40,6 +40,7 @@ async def upload_youtube_video(
             youtube_url=request.youtube_url,
             youtube_video_id=video_id,
             title="Processing...",
+            custom_caption=request.custom_caption,
             status="pending",
             created_at=datetime.utcnow()
         )

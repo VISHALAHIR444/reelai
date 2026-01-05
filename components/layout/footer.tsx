@@ -6,19 +6,19 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-border/40 bg-card/50 backdrop-blur-sm">
+    <footer className="border-t border-studio-neon-green/30 bg-studio-black/80 backdrop-blur-sm shadow-studio-glow-green">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-lg border border-border bg-foreground" />
-              <span className="font-bold text-lg text-foreground tracking-tight">
-                GRAVIXAI
+              <div className="h-8 w-8 rounded-lg border border-studio-neon-cyan bg-gradient-to-br from-studio-neon-cyan to-studio-neon-magenta shadow-studio-glow-cyan" />
+              <span className="font-bold text-lg text-studio-neon-cyan tracking-tight">
+                Reels Forge
               </span>
             </div>
-            <p className="text-sm text-muted-foreground">
-              Convert YouTube videos to Instagram Reels automatically
+            <p className="text-sm text-studio-fog">
+              Neural Networks. Quantum Processing. Viral Reels.
             </p>
           </div>
 

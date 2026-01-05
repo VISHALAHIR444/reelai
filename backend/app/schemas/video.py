@@ -8,6 +8,7 @@ from datetime import datetime
 class VideoUploadRequest(BaseModel):
     """YouTube video upload request"""
     youtube_url: HttpUrl
+    custom_caption: Optional[str] = None
     title: Optional[str] = None
 
 

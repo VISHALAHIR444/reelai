@@ -11,7 +11,6 @@ class AccountStatus(str, Enum):
     CONNECTED = "connected"
     VERIFICATION_FAILED = "verification_failed"
     INACTIVE = "inactive"
-    DELETED = "deleted"
 
 
 class InstagramAccountCreate(BaseModel):

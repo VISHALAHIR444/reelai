@@ -8,6 +8,7 @@ from typing import Optional, List
 # Video Schemas
 class VideoBase(BaseModel):
     youtube_url: str
+    custom_caption: Optional[str] = None
 
 
 class VideoCreate(VideoBase):

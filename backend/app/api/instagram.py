@@ -247,7 +247,7 @@ async def delete_instagram_account(
         )
     
     # Soft delete
-    account.status = AccountStatus.DELETED
+    account.status = AccountStatus.INACTIVE
     db.commit()
     
     return {

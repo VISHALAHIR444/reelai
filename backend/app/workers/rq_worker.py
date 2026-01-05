@@ -129,31 +129,65 @@ async def process_vertical_conversion_job(job_id: int, chunks: list, video_id: s
         update_job_status(job_id, JobStatus.FAILED, 0, error=str(e))
 
 
-async def process_ai_generation_job(job_id: int, reels: list, transcript: str = None):
+async def process_ai_generation_job(job_id: int, reels: list, transcript: str = None, custom_caption: str = None, video_id: int = None):
     """Background job: Generate AI metadata for reels"""
     try:
         update_job_status(job_id, JobStatus.PROCESSING, 30)
-        
+
         from app.services.gemini_service import GeminiAIService
+        from app.models.reel import Reel, ReelQuality
+        from app.db.database import SessionLocal
         ai_service = GeminiAIService()
-        
+
         reels_with_ai = []
         total = len(reels)
-        
+
+        db = SessionLocal()
+
         for i, reel in enumerate(reels):
-            metadata = await ai_service.generate_reel_metadata(
-                transcript=transcript,
-                duration=reel.get('duration'),
-            )
-            
+            if custom_caption:
+                # Use custom caption instead of AI generation
+                metadata = {
+                    'title': f"Reel {i+1}",
+                    'caption': custom_caption,
+                    'hashtags': ['#reels', '#viral', '#content', '#shorts', '#trending'],
+                    'topics': ['entertainment'],
+                    'quality_score': 0.8
+                }
+            else:
+                metadata = await ai_service.generate_reel_metadata(
+                    transcript=transcript,
+                    duration=reel.get('duration'),
+                )
+
             reel['metadata'] = metadata
             reels_with_ai.append(reel)
-            
+
+            # Save reel to database
+            db_reel = Reel(
+                video_id=video_id,
+                chunk_id=reel.get('chunk_number'),  # Assuming chunk_number is used as chunk_id
+                reel_number=i+1,
+                file_path=reel.get('file_path'),
+                file_size=reel.get('file_size'),
+                duration=reel.get('duration'),
+                title=metadata.get('title'),
+                caption=metadata.get('caption'),
+                hashtags=metadata.get('hashtags'),
+                topics=metadata.get('topics'),
+                quality_score=metadata.get('quality_score'),
+                quality_grade=ai_service.calculate_quality_grade(metadata.get('quality_score', 0)),
+            )
+            db.add(db_reel)
+
             progress = 30 + int((i + 1) / total * 50)  # 30-80%
             update_job_status(job_id, JobStatus.PROCESSING, progress)
-        
+
+        db.commit()
+        db.close()
+
         update_job_status(job_id, JobStatus.COMPLETED, 100, {'reels': reels_with_ai})
-    
+
     except Exception as e:
         logger.error(f"Job {job_id} error: {str(e)}")
         update_job_status(job_id, JobStatus.FAILED, 0, error=str(e))

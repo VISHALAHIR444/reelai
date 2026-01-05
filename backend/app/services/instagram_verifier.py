@@ -6,7 +6,8 @@ from typing import Dict, Tuple
 from datetime import datetime
 from sqlalchemy.orm import Session
 from app.models.instagram_account import InstagramAccount, AccountStatus
-from app.services.instagram_publisher import InstagramPublisher
+from app.services.instagram_image_publisher import InstagramImagePublisher
+from app.services.cdn_upload_service import CDNUploadService
 
 logger = logging.getLogger(__name__)
 
@@ -16,10 +17,11 @@ class InstagramVerifier:
     
     MAX_VERIFICATION_ATTEMPTS = 3
     TEST_IMAGE_PATH = "/home/ubuntu/reelai/backend/assets/verification_test.jpg"
-    TEST_CAPTION = "✓ Instagram connection test – posted via Reels Studio"
+    TEST_CAPTION = "Instagram connection test via Reels Studio"
     
     def __init__(self):
-        self.publisher = InstagramPublisher()
+        self.image_publisher = InstagramImagePublisher()
+        self.cdn_service = CDNUploadService()
     
     async def verify_account(
         self,
@@ -69,26 +71,24 @@ class InstagramVerifier:
             
             logger.info(f"Starting verification for account: {account.username}")
             
-            # For now, simulate verification since we need actual Instagram API credentials
-            # In production, this would call:
-            # result = self.publisher.upload_image(
-            #     ig_user_id=ig_user_id,
-            #     image_url=test_image_url,
-            #     caption=self.TEST_CAPTION,
-            #     access_token=access_token
-            # )
+            # Step 1: Upload test image to CDN/public storage
+            public_image_url = await self.cdn_service.upload_file_to_public(
+                local_file_path=self.TEST_IMAGE_PATH,
+                destination_filename=f"verification_{account.username}_{account.id}.jpg"
+            )
             
-            # PRODUCTION IMPLEMENTATION:
-            # Uncomment when Instagram API is configured with real credentials
-            """
-            from app.services.instagram_image_publisher import InstagramImagePublisher
-            image_publisher = InstagramImagePublisher()
+            if not public_image_url:
+                error_msg = "Failed to upload verification image to public storage"
+                logger.error(error_msg)
+                account.status = AccountStatus.VERIFICATION_FAILED
+                account.last_verification_error = error_msg
+                db.commit()
+                return False, error_msg
             
-            # Upload test image to CDN/public storage first
-            public_image_url = await upload_to_cdn(self.TEST_IMAGE_PATH)
+            logger.info(f"Test image uploaded to: {public_image_url}")
             
-            # Publish to Instagram
-            result = image_publisher.upload_and_publish_image(
+            # Step 2: Publish to Instagram using Graph API
+            result = self.image_publisher.upload_and_publish_image(
                 ig_user_id=ig_user_id,
                 image_url=public_image_url,
                 caption=self.TEST_CAPTION,
@@ -104,8 +104,8 @@ class InstagramVerifier:
                 account.last_verification_error = None
                 db.commit()
                 
-                logger.info(f"Account {account.username} verified successfully")
-                return True, "Instagram account verified successfully"
+                logger.info(f"Account {account.username} verified successfully. Media ID: {result['data'].get('media_id')}")
+                return True, f"Instagram account verified successfully. Posted media ID: {result['data'].get('media_id')}"
             else:
                 # Verification failed
                 error_msg = result.get("error", "Unknown error during verification")
@@ -115,19 +115,6 @@ class InstagramVerifier:
                 
                 logger.error(f"Verification failed for {account.username}: {error_msg}")
                 return False, f"Verification failed: {error_msg}"
-            """
-            
-            # TEMPORARY: Mark as verified for testing
-            # Remove this block when implementing real Instagram API
-            account.status = AccountStatus.CONNECTED
-            account.verified_by_post = True
-            account.connected_at = datetime.utcnow()
-            account.last_verified_at = datetime.utcnow()
-            account.last_verification_error = None
-            db.commit()
-            
-            logger.info(f"Account {account.username} marked as verified (test mode)")
-            return True, "Instagram account verified successfully (test mode - replace with real Instagram API)"
             
         except Exception as e:
             error_msg = f"Verification error: {str(e)}"

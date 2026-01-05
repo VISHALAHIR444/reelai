@@ -59,7 +59,7 @@ export function Sidebar() {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed left-0 top-16 z-40 h-[calc(100vh-64px)] w-64 border-r border-white/10 bg-[#0B0F14]/80 backdrop-blur-xl transition-all duration-300 shadow-[0_40px_120px_-80px_rgba(0,0,0,0.8)] lg:translate-x-0",
+          "fixed left-0 top-16 z-40 h-[calc(100vh-64px)] w-64 border-r border-studio-neon-green/30 bg-studio-black/90 backdrop-blur-xl transition-all duration-300 shadow-studio-glow-green lg:translate-x-0",
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
@@ -86,8 +86,8 @@ export function Sidebar() {
                   className={cn(
                     "group relative flex items-center gap-3 rounded-xl px-4 py-2.5 transition-all duration-200 border",
                     isActive
-                      ? "border-white/15 bg-white/10 text-white shadow-[0_18px_50px_-38px_rgba(0,0,0,0.9)]"
-                      : "border-transparent text-white/60 hover:border-white/10 hover:bg-white/5 hover:text-white"
+                      ? "border-studio-neon-cyan/30 bg-studio-slate/70 text-studio-paper shadow-studio-glow-cyan"
+                      : "border-transparent text-studio-fog hover:border-studio-neon-green/30 hover:bg-studio-slate/50 hover:text-studio-paper"
                   )}
                   onClick={() => {
                     // Close sidebar on mobile after navigation
@@ -99,7 +99,7 @@ export function Sidebar() {
                   <Icon className="h-5 w-5" />
                   <span className="font-medium">{item.label}</span>
                   {isActive && (
-                    <div className="absolute right-3 h-1.5 w-1.5 rounded-full bg-[#F6C177]" />
+                    <div className="absolute right-3 h-1.5 w-1.5 rounded-full bg-studio-neon-cyan shadow-studio-glow-cyan" />
                   )}
                 </Link>
               );

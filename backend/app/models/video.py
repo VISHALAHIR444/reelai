@@ -28,7 +28,8 @@ class Video(Base, IDMixin, TimestampMixin):
     description = Column(Text, nullable=True)
     duration = Column(Float, nullable=True)  # in seconds
     thumbnail_url = Column(String(500), nullable=True)
-    
+    custom_caption = Column(Text, nullable=True)  # User-provided custom caption for reels
+
     status = Column(Enum(VideoStatus), default=VideoStatus.UPLOADED, index=True)
     error_message = Column(Text, nullable=True)
     
